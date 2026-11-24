@@ -165,7 +165,13 @@ function sectionEvents() {
         return `<span><b data-count="${n}">${n}</b> ${label}</span>`;
       })
       .join('')}</div>
-    ${album}<div class="events__timeline">${filters('atividades', categories)}<div class="events__reader" role="region" aria-label="Relatos das atividades" tabindex="0" data-lenis-prevent><div class="events__list"><span class="folio-rail" aria-hidden="true"></span>${events.map((e) => `<article class="event" data-category="${e.category}"><div class="folio-meta">${[e.category, e.date].filter(Boolean).join(' · ')}</div><h3>${e.title}</h3>${e.org ? `<strong>${e.org}</strong>` : ''}<p>${e.body}</p></article>`).join('')}</div></div></div></div></section>`;
+    ${album}<div class="events__timeline">${filters('atividades', categories)}<div class="events__reader" role="region" aria-label="Relatos das atividades">
+    <div class="events__list">${events.map((e) => `<article class="event" data-category="${e.category}"><div class="folio-meta">${[e.category, e.date].filter(Boolean).join(' · ')}</div><h3>${e.title}</h3>${e.org ? `<strong>${e.org}</strong>` : ''}<p>${e.body}</p></article>`).join('')}</div>
+    <div class="events__controls">
+      <div class="events__progress"><span data-event-position role="status"></span><progress aria-label="Posição na lista de relatos"></progress></div>
+      <button type="button" data-event-back aria-label="Relato anterior">${icon('back')}</button>
+      <button type="button" data-event-next aria-label="Próximo relato">${icon('next')}</button>
+    </div></div></div></div></section>`;
 }
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 function certMeta(c) {
@@ -278,6 +284,39 @@ function setupFilters(section, apply) {
     }),
   );
 }
+function setupEventReader(section) {
+  const cards = [...section.querySelectorAll('.event')];
+  const previous = section.querySelector('[data-event-back]');
+  const next = section.querySelector('[data-event-next]');
+  const position = section.querySelector('[data-event-position]');
+  const progress = section.querySelector('progress');
+  let visible = cards;
+  let index = 0;
+
+  function showCard() {
+    const current = visible[index];
+    cards.forEach((card) => { card.hidden = card !== current; });
+    position.textContent = current ? `Relato ${index + 1} de ${visible.length}` : 'Nenhum relato';
+    progress.max = visible.length || 1;
+    progress.value = current ? index + 1 : 0;
+    previous.setAttribute('aria-disabled', String(index === 0));
+    next.setAttribute('aria-disabled', String(index >= visible.length - 1));
+  }
+
+  previous.addEventListener('click', () => {
+    if (index > 0) { index--; showCard(); }
+  });
+  next.addEventListener('click', () => {
+    if (index < visible.length - 1) { index++; showCard(); }
+  });
+  setupFilters(section, (value) => {
+    visible = cards.filter((card) => value === 'Todos' || card.dataset.category === value);
+    index = 0;
+    showCard();
+  });
+  showCard();
+}
+
 function setupGallery(section) {
   const album = section.querySelector('.gallery');
   if (!album) return;
@@ -461,69 +500,7 @@ export function renderSections() {
   ].join('');
   setupCase(container.querySelector('#bidxchange'));
   const timeline = container.querySelector('#mentorias');
-  const reader = timeline.querySelector('.events__reader');
-  const reducedScroll = matchMedia('(prefers-reduced-motion: reduce)');
-  let pageDelta = 0;
-  let pageFrame = 0;
-  let lastFrame = 0;
-  function easePageScroll(now) {
-    const elapsed = lastFrame ? Math.min(now - lastFrame, 32) : 16;
-    const step = Math.abs(pageDelta) <= 2 ? pageDelta : pageDelta * (1 - Math.exp(-elapsed / 75));
-    const before = window.scrollY;
-    window.scrollBy({ top: step, behavior: 'instant' });
-    pageDelta -= step;
-    if (Math.abs(step) >= 1 && window.scrollY === before) pageDelta = 0;
-    lastFrame = now;
-    pageFrame = pageDelta ? requestAnimationFrame(easePageScroll) : 0;
-  }
-  function stopPageScroll() {
-    cancelAnimationFrame(pageFrame);
-    pageFrame = pageDelta = lastFrame = 0;
-  }
-  window.addEventListener('wheel', (event) => {
-    if (!reader.contains(event.target)) stopPageScroll();
-  }, { capture: true, passive: true });
-  reader.addEventListener('wheel', (event) => {
-    if (!event.cancelable || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-    if (!event.deltaY) return;
-    // Own the wheel gesture from its first event so it can cross the panel boundary.
-    event.preventDefault();
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? reader.clientHeight : 1;
-    const delta = event.deltaY * unit;
-    if (delta * pageDelta < 0) stopPageScroll();
-    const start = reader.scrollTop;
-    const limit = reader.scrollHeight - reader.clientHeight;
-    const target = Math.min(limit, Math.max(0, start + delta));
-    reader.scrollTop = target;
-    const remaining = delta - (target - start);
-    if (Math.abs(remaining) <= .01) return;
-    if (reducedScroll.matches) {
-      window.scrollBy({ top: remaining, behavior: 'instant' });
-      return;
-    }
-    pageDelta += remaining;
-    if (!pageFrame) {
-      lastFrame = 0;
-      pageFrame = requestAnimationFrame(easePageScroll);
-    }
-  }, { passive: false });
-  function updateReadingProgress() {
-    const limit = reader.scrollHeight - reader.clientHeight;
-    const progress = reader.scrollTop >= limit - 1 ? 1 : Math.max(0, reader.scrollTop / limit);
-    reader.style.setProperty('--reading-progress', progress);
-  }
-  reader.addEventListener('scroll', updateReadingProgress, { passive: true });
-  const readingSize = new ResizeObserver(updateReadingProgress);
-  readingSize.observe(reader);
-  readingSize.observe(reader.querySelector('.events__list'));
-  setupFilters(timeline, (value) => {
-    stopPageScroll();
-    timeline.querySelectorAll('.event').forEach((e) => {
-      e.hidden = value !== 'Todos' && value !== e.dataset.category;
-    });
-    reader.scrollTop = 0;
-    updateReadingProgress();
-  });
+  setupEventReader(timeline);
   setupGallery(timeline);
   setupCerts(container.querySelector('#certificados'));
   setupMotion(container);
