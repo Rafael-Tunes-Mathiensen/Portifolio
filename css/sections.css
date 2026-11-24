@@ -953,7 +953,7 @@
 }
 .gallery {
   max-width: var(--events-width);
-  margin: clamp(2.5rem, 5vw, 5rem) auto clamp(3.5rem, 7vw, 7rem);
+  margin: clamp(2.5rem, 5vw, 5rem) auto clamp(1.25rem, 2.5vw, 2.5rem);
   min-width: 0;
 }
 .gallery__header {
