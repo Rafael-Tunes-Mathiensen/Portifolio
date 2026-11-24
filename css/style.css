@@ -274,7 +274,7 @@ h2 {
 .hero__copy .hero__badge { justify-content: center; }
 .hero__copy :is(.hero__role, .hero__tagline) { margin-inline: auto; }
 .hero h1 {
-  font-size: clamp(3.35rem, 6.35vw, 6.2rem);
+  font-size: clamp(3.35rem, 6.8vw, 6.8rem);
   font-weight: 600;
   letter-spacing: -0.062em;
   line-height: 0.98;
@@ -285,13 +285,13 @@ h2 {
 }
 .hero__role {
   font-family: var(--mono);
-  font-size: clamp(0.74rem, 1vw, 0.92rem);
+  font-size: clamp(0.8rem, 1.1vw, 1.02rem);
   color: var(--accent);
   max-width: 46ch;
   margin: 0 0 18px;
 }
 .hero__tagline {
-  font-size: clamp(1.04rem, 1.55vw, 1.42rem);
+  font-size: clamp(1.08rem, 1.65vw, 1.54rem);
   line-height: 1.45;
   max-width: 37ch;
   color: var(--muted);
@@ -336,28 +336,11 @@ h2 {
 .hero-scene { position: relative; min-width: 0; }
 .hero-scene__stage {
   position: relative;
-  isolation: isolate;
-  height: clamp(335px, 34vw, 505px);
-  background: radial-gradient(ellipse at 60% 32%, color-mix(in srgb, var(--violet) 18%, transparent), transparent 72%);
+  height: clamp(355px, 36vw, 555px);
+  background: radial-gradient(ellipse at 50% 64%, color-mix(in srgb, var(--violet) 9%, transparent), transparent 69%);
 }
-.hero-scene__stage::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: -10% 0 20%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, color-mix(in srgb, var(--violet) 52%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px,
-    repeating-linear-gradient(155deg, transparent 0 72px, color-mix(in srgb, var(--violet) 24%, transparent) 73px, transparent 74px 110px);
-  mask-image: radial-gradient(ellipse at 70% 25%, #000, transparent 76%);
-}
-@media (min-width: 721px) {
-  .hero { padding-top: clamp(1.75rem, 5vh, 3.5rem); }
-  .hero__layout { flex: 0 0 auto; padding-bottom: clamp(2rem, 5vh, 4rem); }
-  .hero__copy { text-align: start; }
-  .hero__copy .hero__badge { justify-content: flex-start; }
-  .hero__copy :is(.hero__role, .hero__tagline) { margin-inline: 0; }
-  .hero .hero__foot { margin-top: auto; }
+@media (min-width: 1000px) {
+  .hero.wrap { width: min(1440px, calc(100% - clamp(36px, 9vw, 150px))); }
 }
 .hero-scene__stage canvas {
   display: block;
@@ -763,7 +746,7 @@ h2 {
   .hero__tagline {
     margin-bottom: 18px;
   }
-  .hero-scene__stage { height: 320px; }
+  .hero-scene__stage { height: 340px; }
   .hero__foot {
     margin-top: 26px;
   }
