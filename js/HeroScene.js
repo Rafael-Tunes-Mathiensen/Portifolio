@@ -268,7 +268,7 @@ export function mountHeroScene(stage) {
       elapsed += dt * motion;
       steam.forEach((particle, index) => {
         const { puff, mote } = particle;
-        const time = elapsed / (mote ? 5.8 : 2.8) + index / (mote ? 3 : 4);
+        const time = elapsed / (mote ? 5.8 : 3.2) + index / (mote ? 3 : 4);
         const cycle = Math.floor(time);
         // Sorteia na passagem pelo ponto invisível para evitar saltos no vapor.
         if (cycle !== particle.cycle) {
@@ -285,7 +285,7 @@ export function mountHeroScene(stage) {
         );
         if (mote) puff.scale.setScalar(.045);
         else puff.scale.set(.12 + phase * .23, .16 + phase * .3, .12 + phase * .23);
-        puff.material.opacity = Math.sin(Math.PI * phase) ** 2 * (mote ? .55 : .28) * motion;
+        puff.material.opacity = Math.sin(Math.PI * phase) ** 2 * (mote ? .55 : .24) * motion;
       });
       const follow = 1 - Math.exp(-(tilt.lengthSq() ? 7 : 1.1)*dt);
       rig.rotation.y += (tilt.x*.56*motion-rig.rotation.y)*follow;
