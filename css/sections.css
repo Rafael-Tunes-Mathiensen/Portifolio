@@ -874,7 +874,10 @@
     opacity: 1;
   }
 }
-#mentorias { --events-width: 62rem; }
+#mentorias {
+  --events-width: 62rem;
+  padding-block-end: clamp(2rem, 4vw, 4rem);
+}
 .events__timeline {
   max-width: var(--events-width);
   margin-inline: auto;
@@ -953,7 +956,7 @@
 }
 .gallery {
   max-width: var(--events-width);
-  margin: clamp(2.5rem, 5vw, 5rem) auto clamp(1.25rem, 2.5vw, 2.5rem);
+  margin: clamp(1.25rem, 2.5vw, 2.5rem) auto;
   min-width: 0;
 }
 .gallery__header {
