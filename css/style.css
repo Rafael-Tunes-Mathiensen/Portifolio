@@ -339,11 +339,39 @@ h2 {
   height: clamp(335px, 34vw, 505px);
   background: radial-gradient(ellipse at 50% 64%, color-mix(in srgb, var(--violet) 9%, transparent), transparent 69%);
 }
-.hero-scene__stage canvas, .hero-scene__stage img {
+.hero-scene__stage canvas {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+.hero-scene__placeholder:not([hidden]) {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: .95rem;
+  color: var(--muted);
+  font: .82rem var(--mono);
+}
+.hero-scene__loader { display: none; }
+.is-loading .hero-scene__loader { display: flex; gap: 6px; }
+.hero-scene__loader i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.hero-scene__loader i:nth-child(2) { background: var(--violet); }
+@media (prefers-reduced-motion: no-preference) {
+  body:not(.motion-paused) .hero-scene__loader i { animation: scene-load .9s ease-in-out var(--delay, 0s) infinite alternate; }
+  .hero-scene__loader i:nth-child(2) { --delay: .15s; }
+  .hero-scene__loader i:nth-child(3) { --delay: .3s; }
+}
+@keyframes scene-load {
+  from { opacity: .45; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(-4px); }
 }
 .hero-scene__tip, .hero-scene__links:focus-within {
   position: absolute;

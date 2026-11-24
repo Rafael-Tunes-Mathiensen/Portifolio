@@ -35,7 +35,6 @@
     />
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/sections.css" />
-    <link rel="preload" as="image" href="./assets/hero.webp" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -123,13 +122,10 @@
           <figure class="hero-scene">
             <div class="hero-scene__stage">
               <span class="hero-scene__tip" hidden aria-hidden="true"></span>
-              <img
-                src="./assets/hero.webp"
-                width="960"
-                height="640"
-                alt="Bancada em pixel art com um monitor de tubo exibindo código verde."
-                fetchpriority="high"
-              />
+              <div class="hero-scene__placeholder" role="status">
+                <span class="hero-scene__loader" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span data-scene-status>Cena 3D indisponível.</span>
+              </div>
             </div>
             <nav aria-label="Atalhos da bancada" class="hero-scene__links sr-only">
               <ul>

@@ -49,16 +49,22 @@ export function setupHero(profile, reduced) {
     }
     if (!reduced.matches) setTimeout(typeNext, 3600);
   }
-  // A imagem continua visível até a primeira renderização bem-sucedida.
+  const stage = $('.hero-scene__stage');
+  const status = stage.querySelector('[data-scene-status]');
+  function setLoading(loading) {
+    stage.classList.toggle('is-loading', loading);
+    status.textContent = loading ? 'Carregando a bancada 3D…' : 'Cena 3D indisponível.';
+  }
+  setLoading(true);
   import('./HeroScene.js').then(({ mountHeroScene }) => {
-    const stage = $('.hero-scene__stage');
     let dispose;
     function mount() {
+      setLoading(true);
       try { dispose = mountHeroScene(stage); }
-      catch { /* O navegador usa a ilustração existente. */ }
+      catch { setLoading(false); }
     }
     mount();
     window.addEventListener('pagehide', () => dispose?.());
     window.addEventListener('pageshow', event => { if (event.persisted) mount(); });
-  }).catch(() => {});
+  }).catch(() => setLoading(false));
 }

@@ -3,7 +3,7 @@ import * as T from './vendor/three/three.module.min.js';
 export function mountHeroScene(stage) {
   const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   const canvas = renderer.domElement;
-  const fallback = stage.querySelector('img');
+  const fallback = stage.querySelector('.hero-scene__placeholder');
   const tip = stage.querySelector('.hero-scene__tip');
   const links = stage.parentElement.querySelector('.hero-scene__links');
   const events = new AbortController();
@@ -28,6 +28,8 @@ export function mountHeroScene(stage) {
     if (!renderer.getContext().isContextLost()) renderer.forceContextLoss();
     canvas.remove();
     tip.hidden = true;
+    stage.classList.remove('is-loading');
+    fallback.querySelector('[data-scene-status]').textContent = 'Cena 3D indisponível.';
     fallback.hidden = false;
   }
 
@@ -315,6 +317,7 @@ export function mountHeroScene(stage) {
     theme();
     resize();
     render(0);
+    stage.classList.remove('is-loading');
     fallback.hidden = true;
     const sizeObserver = new ResizeObserver(resize);
     const intersection = new IntersectionObserver(([entry]) => { active = entry.isIntersecting; visibility(); });
