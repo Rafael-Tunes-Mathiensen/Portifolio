@@ -14,14 +14,14 @@
 }
 :root[data-theme='light'] {
   color-scheme: light;
-  --bg: #f5f6ed;
-  --panel: #e8ece1;
-  --text: #1a2519;
-  --muted: #4c5949;
-  --line: #b8c3b1;
-  --accent: #426b1c;
-  --violet: #724aa2;
-  --on-accent: #fff;
+  --bg: #e5e5dd;
+  --panel: #dddfd7;
+  --text: #282d29;
+  --muted: #4d554e;
+  --line: #aeb5ab;
+  --accent: #42614b;
+  --violet: #655575;
+  --on-accent: #f3f3ed;
 }
 *,
 *::before,
@@ -454,8 +454,8 @@ h2 {
   background-size: 14px 14px;
 }
 :root[data-theme='light'] .contact {
-  --dock-green: #486b15;
-  --dock-purple: #76559e;
+  --dock-green: var(--accent);
+  --dock-purple: var(--violet);
 }
 .contact__eyebrow { display: block; margin-bottom: .8rem; color: var(--dock-purple); font: .75rem var(--mono); }
 .contact__intro { margin: 0 auto 1.4rem; color: var(--muted); }
