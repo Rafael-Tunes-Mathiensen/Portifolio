@@ -122,6 +122,17 @@ export function mountHeroScene(stage) {
     solid(mug, cylinder, paint('#483343'), 0, .541, 0, .426, .008, .426);
     for (const y of [.14, .43]) solid(mug, cube, cream, .30, y, 0, .23, .08, .09);
     solid(mug, cube, cream, .397, .284, 0, .08, .34, .09);
+    const steam = Array.from({ length: 4 }, () => {
+      const material = new T.MeshBasicMaterial({
+        color: '#eadfff', transparent: true, opacity: 0, depthWrite: false,
+      });
+      materials.add(material);
+      const puff = new T.Mesh(leaf, material);
+      // O vapor não intercepta os cliques na caneca ou nos outros atalhos.
+      puff.raycast = () => {};
+      mug.add(puff);
+      return puff;
+    });
     const plant = part('sobre', -2.35, -.15);
     const pot = paint('#d1b0b7');
     solid(plant, cylinder, pot, 0, .30, 0, .62, .60, .62);
@@ -212,7 +223,7 @@ export function mountHeroScene(stage) {
       if (event.pointerType === 'touch') return;
       const rect = stage.getBoundingClientRect();
       const halfHeight = Math.min(rect.width, rect.height) * .55;
-      const halfWidth = halfHeight * 1.16;
+      const halfWidth = halfHeight * 1.30;
       const x = event.clientX - (rect.left + rect.width / 2);
       const y = rect.top + rect.height / 2 - event.clientY;
       if (!halfHeight || Math.abs(x) > halfWidth || Math.abs(y) > halfHeight) {
@@ -255,6 +266,12 @@ export function mountHeroScene(stage) {
       motion = reduced.matches ? 0 : T.MathUtils.damp(motion, still ? 0 : 1, 7, dt);
       if (motion < .001) motion = 0;
       elapsed += dt * motion;
+      steam.forEach((puff, index) => {
+        const phase = (elapsed / 2.8 + index / steam.length) % 1;
+        puff.position.set(Math.sin(phase * 5) * phase * .19, .56 + phase * .96, -phase * .1);
+        puff.scale.set(.12 + phase * .23, .16 + phase * .3, .12 + phase * .23);
+        puff.material.opacity = Math.sin(Math.PI * phase) ** 2 * .28 * motion;
+      });
       const follow = 1 - Math.exp(-(tilt.lengthSq() ? 7 : 1.1)*dt);
       rig.rotation.y += (tilt.x*.56*motion-rig.rotation.y)*follow;
       rig.rotation.x += (-tilt.y*.27*motion-rig.rotation.x)*follow;
