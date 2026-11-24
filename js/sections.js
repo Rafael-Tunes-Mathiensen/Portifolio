@@ -15,6 +15,8 @@ const shapes = {
   next: 'm9 5 7 7-7 7',
   back: 'm15 5-7 7 7 7',
   close: 'm6 6 12 12M18 6 6 18',
+  pause: 'M9 5v14M15 5v14',
+  play: 'M8 5l11 7-11 7z',
   code: 'm7 7-5 5 5 5m10-10 5 5-5 5m-4-12-2 14',
   game: 'M5 7h14l3 10-2 2-5-4H9l-5 4-2-2z M7 9v4m-2-2h4m7-1h1m2 2h1',
   cube: 'm12 2 9 5v10l-9 5-9-5V7z M3 7l9 5 9-5m-9 5v10',
@@ -148,7 +150,7 @@ function sectionEvents() {
         </button>`).join('')}
       </div>
       <div class="gallery__controls"><span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
-        <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática"><span aria-hidden="true">Ⅱ</span></button>
+        <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática">${icon('pause')}</button>
         <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
         <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
       </div>
@@ -356,7 +358,7 @@ function setupGallery(section) {
     paused = !paused;
     pause.setAttribute('aria-pressed', String(paused));
     pause.title = paused ? 'Retomar troca automática' : 'Pausar troca automática';
-    pause.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
+    pause.innerHTML = icon(paused ? 'play' : 'pause');
     schedule();
   };
   album.addEventListener('pointerenter', (event) => { hovered = event.pointerType === 'mouse'; schedule(); });
