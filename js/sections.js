@@ -150,17 +150,18 @@ function sectionEvents() {
           <img src="${photo.src}" loading="lazy" alt="">
         </button>`).join('')}
       </div>
-      <div class="gallery__controls"><span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
-        <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática">${icon('pause')}</button>
-        <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
-        <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
-      </div>
     </div>
     <div id="gallery-stage" class="gallery__stage" tabindex="0" role="group" aria-label="Fotos dos encontros. Use as setas para navegar.">
       ${gallery.map((photo, i) => `<div class="gallery__slide${i === 0 ? ' is-current' : ''}" aria-hidden="${i !== 0}">
         <img class="gallery__wash" loading="lazy" src="${photo.src}" alt="">
         <img class="gallery__photo" loading="lazy" src="${photo.src}" alt="${photo.alt}" draggable="false">
       </div>`).join('')}
+    </div>
+    <div class="gallery__controls">
+      <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
+      <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática">${icon('pause')}</button>
+      <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
+      <span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
     </div>
     </section>` : '';
   return `<section id="mentorias" class="folio-section"><div class="wrap"><h2>Mentorias e palestras</h2>

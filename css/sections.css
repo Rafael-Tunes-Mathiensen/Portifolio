@@ -942,21 +942,23 @@
 }
 .gallery__header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: .65rem 1rem;
   margin-bottom: 1.25rem;
 }
-.gallery__header h3 { grid-column: 1 / -1; }
 .gallery__controls {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: .3rem;
+  margin-top: .85rem;
 }
-.gallery__controls [data-gallery-pause]:not([hidden]) {
+.gallery__controls button:not([hidden]) {
   display: grid;
   place-items: center;
   padding: 0;
+  margin-left: 0;
 }
 .gallery__controls button,
 .cert-dialog__header button {
@@ -1017,6 +1019,7 @@
 .gallery__thumbs {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: .4rem;
 }
 .gallery__thumb {
@@ -1046,7 +1049,8 @@
   border-color: var(--accent);
 }
 .gallery__status {
-  margin-right: .4rem;
+  flex-basis: 100%;
+  text-align: center;
   font-variant-numeric: tabular-nums;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1055,8 +1059,6 @@
   }
 }
 @media (max-width: 600px) {
-  .gallery__header { grid-template-columns: minmax(0, 1fr); }
-  .gallery__controls { justify-content: flex-end; }
   .gallery__stage {
     height: clamp(16rem, 88vw, 24rem);
   }
