@@ -10,7 +10,7 @@ export function mountAboutTerminal(host, reducedMotion) {
         <div role="log" aria-live="polite" aria-label="Saída do terminal"></div>
       </div>
       <div class="about-terminal__controls">
-        <form><span aria-hidden="true">❯</span><input aria-label="Digite um comando" placeholder="digite help e tecle enter" autocomplete="off" autocapitalize="off" spellcheck="false"></form>
+        <form><span class="about-terminal__prompt" aria-hidden="true">❯</span><input aria-label="Digite um comando" placeholder="digite help e tecle enter" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="about-terminal__waiting" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></form>
         <div class="about-terminal__chips" role="group" aria-label="Comandos do terminal"></div>
       </div>
     </div>`;

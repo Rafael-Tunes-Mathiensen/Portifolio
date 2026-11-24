@@ -194,7 +194,7 @@
 .about-terminal [role='log'] > div { margin-bottom: .3rem; }
 .about-terminal [role='log'] a,
 .about-terminal__echo,
-.about-terminal form > span { color: #c3fa67; }
+.about-terminal__prompt { color: #c3fa67; }
 .about-terminal__error { color: #d6b9ff; }
 .about-terminal__echo { margin-top: .55rem; color: #dde0db; }
 .about-terminal form { display: flex; align-items: center; gap: .5rem; }
@@ -221,7 +221,21 @@
 .about-terminal__chips button:hover { border-color: var(--accent); }
 .about-terminal :focus-visible { outline: 2px solid #b9a1e2; outline-offset: 2px; }
 .about-terminal input:focus { outline: none; }
-.about-terminal form:focus-within > span { text-decoration: underline; text-underline-offset: .2em; }
+.about-terminal form:focus-within > .about-terminal__prompt { text-decoration: underline; text-underline-offset: .2em; }
+.about-terminal__waiting { display: none; color: #c3fa67; }
+.about-terminal input:placeholder-shown:not([readonly]) + .about-terminal__waiting { display: inline-flex; }
+.about-terminal__waiting i { font-style: normal; }
+@media (prefers-reduced-motion: no-preference) {
+  body:not(.motion-paused) .about-terminal__waiting i {
+    animation: terminal-wait 1.2s ease-in-out var(--delay, 0s) infinite;
+  }
+  .about-terminal__waiting i:nth-child(2) { --delay: .16s; }
+  .about-terminal__waiting i:nth-child(3) { --delay: .32s; }
+}
+@keyframes terminal-wait {
+  0%, 65%, 100% { opacity: .45; }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
 @media (max-width: 620px) {
   .about-terminal__window { height: 350px; }
 }
