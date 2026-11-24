@@ -336,8 +336,28 @@ h2 {
 .hero-scene { position: relative; min-width: 0; }
 .hero-scene__stage {
   position: relative;
+  isolation: isolate;
   height: clamp(335px, 34vw, 505px);
-  background: radial-gradient(ellipse at 50% 64%, color-mix(in srgb, var(--violet) 9%, transparent), transparent 69%);
+  background: radial-gradient(ellipse at 60% 32%, color-mix(in srgb, var(--violet) 18%, transparent), transparent 72%);
+}
+.hero-scene__stage::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -10% 0 20%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--violet) 52%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px,
+    repeating-linear-gradient(155deg, transparent 0 72px, color-mix(in srgb, var(--violet) 24%, transparent) 73px, transparent 74px 110px);
+  mask-image: radial-gradient(ellipse at 70% 25%, #000, transparent 76%);
+}
+@media (min-width: 721px) {
+  .hero { padding-top: clamp(1.75rem, 5vh, 3.5rem); }
+  .hero__layout { flex: 0 0 auto; padding-bottom: clamp(2rem, 5vh, 4rem); }
+  .hero__copy { text-align: start; }
+  .hero__copy .hero__badge { justify-content: flex-start; }
+  .hero__copy :is(.hero__role, .hero__tagline) { margin-inline: 0; }
+  .hero .hero__foot { margin-top: auto; }
 }
 .hero-scene__stage canvas {
   display: block;
