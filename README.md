@@ -20,7 +20,7 @@ Na seção de contato, os rótulos e ícones dos quatro canais vêm de `profile.
 
 A capa do case BidXchange usa a marca enviada pelos autores e duas capturas da página inicial pública, uma em desktop e outra em celular. Atualize o endereço em `tcc.live` e as imagens de `tcc.preview` no `js/data.js` quando a interface mudar. As quatro cenas logo abaixo ilustram o fluxo de compra; os textos de cada etapa também ficam no cadastro do TCC.
 
-A bancada do hero é construída com primitivas em `js/HeroScene.js` e usa a cópia local do Three.js r170 em `js/vendor/three/`. Os atalhos das cinco peças também estão disponíveis pelo teclado. Sem WebGL, a página exibe `assets/hero.webp`. O botão de pausa na legenda controla as animações da bancada e os efeitos existentes no portfólio.
+A bancada do hero é construída com primitivas em `js/HeroScene.js` e usa a cópia local do Three.js r170 em `js/vendor/three/`. Os atalhos das cinco peças também estão disponíveis pelo teclado. Durante o carregamento, a página mostra um indicador. Sem WebGL, ela informa que a cena 3D está indisponível. O botão de pausa na legenda controla as animações da bancada e os efeitos existentes no portfólio.
 
 1. Abra `js/data.js` e localize o texto, contato ou lista que deseja atualizar. Para adicionar um item, copie um registro da mesma lista e edite os campos. Preserve o formato das datas dos certificados para manter a ordenação.
 2. Salve fotos em `assets/fotos/` e certificados em `assets/certificados/`. Prefira nomes em minúsculas. No cadastro, aponte para um caminho relativo, como `assets/fotos/visita.webp`. Respeite maiúsculas e minúsculas, pois o GitHub Pages as diferencia.

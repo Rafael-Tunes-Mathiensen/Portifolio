@@ -15,6 +15,8 @@ const shapes = {
   next: 'm9 5 7 7-7 7',
   back: 'm15 5-7 7 7 7',
   close: 'm6 6 12 12M18 6 6 18',
+  pause: 'M9 5v14M15 5v14',
+  play: 'M8 5l11 7-11 7z',
   code: 'm7 7-5 5 5 5m10-10 5 5-5 5m-4-12-2 14',
   game: 'M5 7h14l3 10-2 2-5-4H9l-5 4-2-2z M7 9v4m-2-2h4m7-1h1m2 2h1',
   cube: 'm12 2 9 5v10l-9 5-9-5V7z M3 7l9 5 9-5m-9 5v10',
@@ -104,9 +106,10 @@ function audienceView(role) {
 function sectionCase() {
   const audience = Object.keys(tcc.audiences);
   return `<section id="bidxchange" class="folio-section case"><div class="wrap">
+    <h2 class="case__title">${tcc.name}</h2>
     <header class="case-cover">
       <div class="case-cover__story">
-        <div class="case-cover__identity"><h2><img src="${tcc.preview.logo}" alt="${tcc.name}" width="170" height="108" loading="lazy"></h2><span class="case__seal">TCC</span></div>
+        <div class="case-cover__identity"><img src="${tcc.preview.logo}" alt="" width="170" height="108" loading="lazy"><span class="case__seal">TCC</span></div>
         <h3>${tcc.pitch}</h3><p>${tcc.overview}</p><p class="case__authors">Por ${tcc.authors}</p>
         <div class="case-cover__links">${link('Acessar plataforma', tcc.live, 'case-cover__primary magnetic')}${link('Ver documentação', tcc.docs, 'case-cover__secondary')}</div>
       </div>
@@ -142,9 +145,10 @@ function sectionEvents() {
   ];
   const album = gallery.length ? `<section class="gallery" aria-labelledby="gallery-title" aria-roledescription="carrossel">
     <div class="gallery__header"><h3 id="gallery-title">Álbum de encontros</h3>
-      <div class="gallery__controls"><span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
-        <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
-        <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
+      <div class="gallery__thumbs" role="group" aria-label="Escolher foto">
+        ${gallery.map((photo, i) => `<button class="gallery__thumb" type="button" aria-controls="gallery-stage" aria-label="Foto ${i+1}. ${photo.alt}" aria-current="${i === 0}">
+          <img src="${photo.src}" loading="lazy" alt="">
+        </button>`).join('')}
       </div>
     </div>
     <div id="gallery-stage" class="gallery__stage" tabindex="0" role="group" aria-label="Fotos dos encontros. Use as setas para navegar.">
@@ -153,11 +157,13 @@ function sectionEvents() {
         <img class="gallery__photo" loading="lazy" src="${photo.src}" alt="${photo.alt}" draggable="false">
       </div>`).join('')}
     </div>
-    <div class="gallery__thumbs" role="group" aria-label="Escolher foto">
-      ${gallery.map((photo, i) => `<button class="gallery__thumb" type="button" aria-controls="gallery-stage" aria-label="Foto ${i+1}. ${photo.alt}" aria-current="${i === 0}">
-        <img src="${photo.src}" loading="lazy" alt="">
-      </button>`).join('')}
-    </div></section>` : '';
+    <div class="gallery__controls">
+      <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
+      <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática">${icon('pause')}</button>
+      <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
+      <span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
+    </div>
+    </section>` : '';
   return `<section id="mentorias" class="folio-section"><div class="wrap"><h2>Mentorias e palestras</h2>
     <div class="events__metrics">${metrics
       .map(([cat, label]) => {
@@ -165,7 +171,13 @@ function sectionEvents() {
         return `<span><b data-count="${n}">${n}</b> ${label}</span>`;
       })
       .join('')}</div>
-    ${album}<div class="events__timeline">${filters('atividades', categories)}<div class="events__reader" role="region" aria-label="Relatos das atividades" tabindex="0" data-lenis-prevent><div class="events__list"><span class="folio-rail" aria-hidden="true"></span>${events.map((e) => `<article class="event" data-category="${e.category}"><div class="folio-meta">${[e.category, e.date].filter(Boolean).join(' · ')}</div><h3>${e.title}</h3>${e.org ? `<strong>${e.org}</strong>` : ''}<p>${e.body}</p></article>`).join('')}</div></div></div></div></section>`;
+    ${album}<div class="events__timeline"><div class="events__reader" role="region" aria-label="Relatos das atividades">
+    <div class="events__list">${events.map((e) => `<article class="event" data-category="${e.category}"><div class="folio-meta">${[e.category, e.date].filter(Boolean).join(' · ')}</div><h3>${e.title}</h3>${e.org ? `<strong>${e.org}</strong>` : ''}<p>${e.body}</p></article>`).join('')}</div>
+    <div class="events__controls">
+      <div class="events__progress"><span data-event-position role="status"></span><progress aria-label="Posição na lista de relatos"></progress></div>
+      <button type="button" data-event-back aria-label="Relato anterior">${icon('back')}</button>
+      <button type="button" data-event-next aria-label="Próximo relato">${icon('next')}</button>
+    </div></div>${filters('atividades', categories)}</div></div></section>`;
 }
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 function certMeta(c) {
@@ -278,6 +290,39 @@ function setupFilters(section, apply) {
     }),
   );
 }
+function setupEventReader(section) {
+  const cards = [...section.querySelectorAll('.event')];
+  const previous = section.querySelector('[data-event-back]');
+  const next = section.querySelector('[data-event-next]');
+  const position = section.querySelector('[data-event-position]');
+  const progress = section.querySelector('progress');
+  let visible = cards;
+  let index = 0;
+
+  function showCard() {
+    const current = visible[index];
+    cards.forEach((card) => { card.hidden = card !== current; });
+    position.textContent = current ? `Relato ${index + 1} de ${visible.length}` : 'Nenhum relato';
+    progress.max = visible.length || 1;
+    progress.value = current ? index + 1 : 0;
+    previous.setAttribute('aria-disabled', String(index === 0));
+    next.setAttribute('aria-disabled', String(index >= visible.length - 1));
+  }
+
+  previous.addEventListener('click', () => {
+    if (index > 0) { index--; showCard(); }
+  });
+  next.addEventListener('click', () => {
+    if (index < visible.length - 1) { index++; showCard(); }
+  });
+  setupFilters(section, (value) => {
+    visible = cards.filter((card) => value === 'Todos' || card.dataset.category === value);
+    index = 0;
+    showCard();
+  });
+  showCard();
+}
+
 function setupGallery(section) {
   const album = section.querySelector('.gallery');
   if (!album) return;
@@ -285,8 +330,21 @@ function setupGallery(section) {
   const thumbs = [...album.querySelectorAll('.gallery__thumb')];
   const stage = album.querySelector('.gallery__stage');
   const status = album.querySelector('.gallery__status');
+  const pause = album.querySelector('[data-gallery-pause]');
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  let paused = false;
+  let inView = false;
+  let hovered = false;
+  let timer;
   let active = 0;
-  function select(index) {
+  function schedule() {
+    clearTimeout(timer);
+    pause.hidden = motion.matches || slides.length < 2;
+    if (pause.hidden || paused || !inView || hovered || document.hidden ||
+        album.contains(document.activeElement) || document.body.classList.contains('motion-paused')) return;
+    timer = setTimeout(() => select(active + 1, true), 6000);
+  }
+  function select(index, automatic = false) {
     active = (index + slides.length) % slides.length;
     slides.forEach((slide, i) => {
       const selected = i === active;
@@ -294,8 +352,29 @@ function setupGallery(section) {
       slide.setAttribute('aria-hidden', String(!selected));
       thumbs[i].setAttribute('aria-current', String(selected));
     });
+    status.setAttribute('aria-live', automatic ? 'off' : 'polite');
     status.textContent = `Foto ${active + 1} de ${slides.length}`;
+    schedule();
   }
+  pause.onclick = () => {
+    paused = !paused;
+    pause.setAttribute('aria-pressed', String(paused));
+    pause.title = paused ? 'Retomar troca automática' : 'Pausar troca automática';
+    pause.innerHTML = icon(paused ? 'play' : 'pause');
+    schedule();
+  };
+  album.addEventListener('pointerenter', (event) => { hovered = event.pointerType === 'mouse'; schedule(); });
+  album.addEventListener('pointerleave', () => { hovered = false; schedule(); });
+  album.addEventListener('focusin', schedule);
+  album.addEventListener('focusout', () => queueMicrotask(schedule));
+  document.addEventListener('visibilitychange', schedule);
+  document.addEventListener('portfolio-motion', schedule);
+  motion.addEventListener('change', schedule);
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting && entry.intersectionRatio >= .35;
+    schedule();
+  }, { threshold: .35 }).observe(stage);
+  schedule();
   album.querySelector('[data-prev]').onclick = () => select(active - 1);
   album.querySelector('[data-next]').onclick = () => select(active + 1);
   thumbs.forEach((thumb, i) => thumb.onclick = () => select(i));
@@ -461,69 +540,7 @@ export function renderSections() {
   ].join('');
   setupCase(container.querySelector('#bidxchange'));
   const timeline = container.querySelector('#mentorias');
-  const reader = timeline.querySelector('.events__reader');
-  const reducedScroll = matchMedia('(prefers-reduced-motion: reduce)');
-  let pageDelta = 0;
-  let pageFrame = 0;
-  let lastFrame = 0;
-  function easePageScroll(now) {
-    const elapsed = lastFrame ? Math.min(now - lastFrame, 32) : 16;
-    const step = Math.abs(pageDelta) <= 2 ? pageDelta : pageDelta * (1 - Math.exp(-elapsed / 75));
-    const before = window.scrollY;
-    window.scrollBy({ top: step, behavior: 'instant' });
-    pageDelta -= step;
-    if (Math.abs(step) >= 1 && window.scrollY === before) pageDelta = 0;
-    lastFrame = now;
-    pageFrame = pageDelta ? requestAnimationFrame(easePageScroll) : 0;
-  }
-  function stopPageScroll() {
-    cancelAnimationFrame(pageFrame);
-    pageFrame = pageDelta = lastFrame = 0;
-  }
-  window.addEventListener('wheel', (event) => {
-    if (!reader.contains(event.target)) stopPageScroll();
-  }, { capture: true, passive: true });
-  reader.addEventListener('wheel', (event) => {
-    if (!event.cancelable || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-    if (!event.deltaY) return;
-    // Own the wheel gesture from its first event so it can cross the panel boundary.
-    event.preventDefault();
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? reader.clientHeight : 1;
-    const delta = event.deltaY * unit;
-    if (delta * pageDelta < 0) stopPageScroll();
-    const start = reader.scrollTop;
-    const limit = reader.scrollHeight - reader.clientHeight;
-    const target = Math.min(limit, Math.max(0, start + delta));
-    reader.scrollTop = target;
-    const remaining = delta - (target - start);
-    if (Math.abs(remaining) <= .01) return;
-    if (reducedScroll.matches) {
-      window.scrollBy({ top: remaining, behavior: 'instant' });
-      return;
-    }
-    pageDelta += remaining;
-    if (!pageFrame) {
-      lastFrame = 0;
-      pageFrame = requestAnimationFrame(easePageScroll);
-    }
-  }, { passive: false });
-  function updateReadingProgress() {
-    const limit = reader.scrollHeight - reader.clientHeight;
-    const progress = reader.scrollTop >= limit - 1 ? 1 : Math.max(0, reader.scrollTop / limit);
-    reader.style.setProperty('--reading-progress', progress);
-  }
-  reader.addEventListener('scroll', updateReadingProgress, { passive: true });
-  const readingSize = new ResizeObserver(updateReadingProgress);
-  readingSize.observe(reader);
-  readingSize.observe(reader.querySelector('.events__list'));
-  setupFilters(timeline, (value) => {
-    stopPageScroll();
-    timeline.querySelectorAll('.event').forEach((e) => {
-      e.hidden = value !== 'Todos' && value !== e.dataset.category;
-    });
-    reader.scrollTop = 0;
-    updateReadingProgress();
-  });
+  setupEventReader(timeline);
   setupGallery(timeline);
   setupCerts(container.querySelector('#certificados'));
   setupMotion(container);
