@@ -270,6 +270,9 @@ h2 {
   align-items: center;
   gap: clamp(24px, 4.7vw, 75px);
 }
+.hero__copy { text-align: center; }
+.hero__copy .hero__badge { justify-content: center; }
+.hero__copy :is(.hero__role, .hero__tagline) { margin-inline: auto; }
 .hero h1 {
   font-size: clamp(3.35rem, 6.35vw, 6.2rem);
   font-weight: 600;

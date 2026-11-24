@@ -11,6 +11,8 @@
   line-height: 1.03;
   letter-spacing: -0.045em;
   margin-bottom: clamp(1.8rem, 4vw, 3.5rem);
+  text-align: center;
+  text-wrap: balance;
 }
 .folio-section h2 sup {
   vertical-align: top;
@@ -24,6 +26,9 @@
   line-height: 1.22;
   letter-spacing: -0.028em;
 }
+.skills__group h3,
+.case__panels > div > h3,
+.gallery__header h3 { text-align: center; text-wrap: balance; }
 .folio-section p {
   color: var(--muted);
   line-height: 1.65;
@@ -371,6 +376,9 @@
   align-items: center;
   gap: .8rem 1.2rem;
 }
+.case-cover__story { text-align: center; }
+.case-cover__identity,
+.case-cover__links { justify-content: center; }
 .case-cover__identity { margin-bottom: clamp(1.2rem, 2.8vw, 2.8rem); }
 .case-cover__identity h2 { margin: 0; line-height: 0; }
 .case-cover__identity img { width: clamp(105px, 10vw, 150px); height: auto; mix-blend-mode: multiply; }
@@ -382,9 +390,10 @@
   line-height: .99;
   letter-spacing: -.045em;
   max-width: 13ch;
+  margin-inline: auto;
   text-wrap: balance;
 }
-.case-cover__story p { color: #405349; margin-block: 1.35rem 1.6rem; max-width: 43ch; }
+.case-cover__story p { color: #405349; margin-block: 1.35rem 1.6rem; margin-inline: auto; max-width: 43ch; }
 .case-cover__links .folio-link { min-height: 46px; }
 .case-cover__links .case-cover__primary { background: var(--case-blue); color: white; padding: .72rem 1rem; border-radius: 6px; }
 .case-cover__links .case-cover__secondary { color: var(--ink); text-decoration: underline; text-underline-offset: .28em; }
@@ -843,9 +852,11 @@
   justify-content: center;
   margin-top: 1rem;
 }
+#mentorias > .wrap > h2 { margin-bottom: clamp(.8rem, 2vw, 1.4rem); }
 .events__metrics {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem 1rem;
   color: var(--muted);
   margin-bottom: 1.2rem;
