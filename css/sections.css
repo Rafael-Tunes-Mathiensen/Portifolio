@@ -1,5 +1,6 @@
 .folio-section {
   padding-block: clamp(4rem, 8vw, 8rem);
+  padding-block-start: clamp(2rem, 4vw, 4rem);
   border-top: 1px solid var(--line);
   color: var(--text);
 }
@@ -1171,7 +1172,7 @@
 .cert-dialog__links {
   justify-content: flex-end;
 }
-#hobbies { padding-block: clamp(2rem, 4vw, 4rem); }
+#hobbies { padding-block-end: clamp(2rem, 4vw, 4rem); }
 .hobbies {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
