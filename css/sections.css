@@ -198,9 +198,15 @@
 .about-terminal__error { color: #d6b9ff; }
 .about-terminal__echo { margin-top: .55rem; color: #dde0db; }
 .about-terminal form { display: flex; align-items: center; gap: .5rem; }
-.about-terminal input {
+.about-terminal__entry {
+  position: relative;
   flex: 1;
   min-width: 0;
+  font-size: 1rem;
+}
+.about-terminal input {
+  display: block;
+  width: 100%;
   padding: .3rem;
   font: inherit;
   font-size: 1rem;
@@ -222,7 +228,17 @@
 .about-terminal :focus-visible { outline: 2px solid #b9a1e2; outline-offset: 2px; }
 .about-terminal input:focus { outline: none; }
 .about-terminal form:focus-within > .about-terminal__prompt { text-decoration: underline; text-underline-offset: .2em; }
-.about-terminal__waiting { display: none; color: #c3fa67; }
+.about-terminal input:not([readonly])::placeholder { color: transparent; }
+.about-terminal__waiting {
+  display: none;
+  position: absolute;
+  inset: .3rem .3rem auto;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  color: #a2a59e;
+  font-size: clamp(.8rem, 3.6vw, 1rem);
+}
 .about-terminal input:placeholder-shown:not([readonly]) + .about-terminal__waiting { display: inline-flex; }
 .about-terminal__waiting i { font-style: normal; }
 @media (prefers-reduced-motion: no-preference) {
