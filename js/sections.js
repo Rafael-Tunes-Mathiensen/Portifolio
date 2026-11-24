@@ -142,7 +142,13 @@ function sectionEvents() {
   ];
   const album = gallery.length ? `<section class="gallery" aria-labelledby="gallery-title" aria-roledescription="carrossel">
     <div class="gallery__header"><h3 id="gallery-title">Álbum de encontros</h3>
+      <div class="gallery__thumbs" role="group" aria-label="Escolher foto">
+        ${gallery.map((photo, i) => `<button class="gallery__thumb" type="button" aria-controls="gallery-stage" aria-label="Foto ${i+1}. ${photo.alt}" aria-current="${i === 0}">
+          <img src="${photo.src}" loading="lazy" alt="">
+        </button>`).join('')}
+      </div>
       <div class="gallery__controls"><span class="gallery__status" aria-live="polite" aria-atomic="true">Foto 1 de ${gallery.length}</span>
+        <button type="button" data-gallery-pause aria-pressed="false" aria-label="Pausar troca automática" title="Pausar troca automática"><span aria-hidden="true">Ⅱ</span></button>
         <button type="button" data-prev aria-controls="gallery-stage" aria-label="Foto anterior">${icon('back')}</button>
         <button type="button" data-next aria-controls="gallery-stage" aria-label="Próxima foto">${icon('next')}</button>
       </div>
@@ -153,11 +159,7 @@ function sectionEvents() {
         <img class="gallery__photo" loading="lazy" src="${photo.src}" alt="${photo.alt}" draggable="false">
       </div>`).join('')}
     </div>
-    <div class="gallery__thumbs" role="group" aria-label="Escolher foto">
-      ${gallery.map((photo, i) => `<button class="gallery__thumb" type="button" aria-controls="gallery-stage" aria-label="Foto ${i+1}. ${photo.alt}" aria-current="${i === 0}">
-        <img src="${photo.src}" loading="lazy" alt="">
-      </button>`).join('')}
-    </div></section>` : '';
+    </section>` : '';
   return `<section id="mentorias" class="folio-section"><div class="wrap"><h2>Mentorias e palestras</h2>
     <div class="events__metrics">${metrics
       .map(([cat, label]) => {
@@ -165,13 +167,13 @@ function sectionEvents() {
         return `<span><b data-count="${n}">${n}</b> ${label}</span>`;
       })
       .join('')}</div>
-    ${album}<div class="events__timeline">${filters('atividades', categories)}<div class="events__reader" role="region" aria-label="Relatos das atividades">
+    ${album}<div class="events__timeline"><div class="events__reader" role="region" aria-label="Relatos das atividades">
     <div class="events__list">${events.map((e) => `<article class="event" data-category="${e.category}"><div class="folio-meta">${[e.category, e.date].filter(Boolean).join(' · ')}</div><h3>${e.title}</h3>${e.org ? `<strong>${e.org}</strong>` : ''}<p>${e.body}</p></article>`).join('')}</div>
     <div class="events__controls">
       <div class="events__progress"><span data-event-position role="status"></span><progress aria-label="Posição na lista de relatos"></progress></div>
       <button type="button" data-event-back aria-label="Relato anterior">${icon('back')}</button>
       <button type="button" data-event-next aria-label="Próximo relato">${icon('next')}</button>
-    </div></div></div></div></section>`;
+    </div></div>${filters('atividades', categories)}</div></div></section>`;
 }
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 function certMeta(c) {
@@ -324,8 +326,21 @@ function setupGallery(section) {
   const thumbs = [...album.querySelectorAll('.gallery__thumb')];
   const stage = album.querySelector('.gallery__stage');
   const status = album.querySelector('.gallery__status');
+  const pause = album.querySelector('[data-gallery-pause]');
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  let paused = false;
+  let inView = false;
+  let hovered = false;
+  let timer;
   let active = 0;
-  function select(index) {
+  function schedule() {
+    clearTimeout(timer);
+    pause.hidden = motion.matches || slides.length < 2;
+    if (pause.hidden || paused || !inView || hovered || document.hidden ||
+        album.contains(document.activeElement) || document.body.classList.contains('motion-paused')) return;
+    timer = setTimeout(() => select(active + 1, true), 6000);
+  }
+  function select(index, automatic = false) {
     active = (index + slides.length) % slides.length;
     slides.forEach((slide, i) => {
       const selected = i === active;
@@ -333,8 +348,29 @@ function setupGallery(section) {
       slide.setAttribute('aria-hidden', String(!selected));
       thumbs[i].setAttribute('aria-current', String(selected));
     });
+    status.setAttribute('aria-live', automatic ? 'off' : 'polite');
     status.textContent = `Foto ${active + 1} de ${slides.length}`;
+    schedule();
   }
+  pause.onclick = () => {
+    paused = !paused;
+    pause.setAttribute('aria-pressed', String(paused));
+    pause.title = paused ? 'Retomar troca automática' : 'Pausar troca automática';
+    pause.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
+    schedule();
+  };
+  album.addEventListener('pointerenter', (event) => { hovered = event.pointerType === 'mouse'; schedule(); });
+  album.addEventListener('pointerleave', () => { hovered = false; schedule(); });
+  album.addEventListener('focusin', schedule);
+  album.addEventListener('focusout', () => queueMicrotask(schedule));
+  document.addEventListener('visibilitychange', schedule);
+  document.addEventListener('portfolio-motion', schedule);
+  motion.addEventListener('change', schedule);
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting && entry.intersectionRatio >= .35;
+    schedule();
+  }, { threshold: .35 }).observe(stage);
+  schedule();
   album.querySelector('[data-prev]').onclick = () => select(active - 1);
   album.querySelector('[data-next]').onclick = () => select(active + 1);
   thumbs.forEach((thumb, i) => thumb.onclick = () => select(i));
