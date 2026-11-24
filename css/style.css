@@ -789,18 +789,6 @@ h2 {
     transform: none;
   }
 }
-#motion-toggle {
-  display: grid;
-  place-items: center;
-  margin-left: auto;
-  color: #bac8b2;
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
-}
-#motion-toggle:hover {
-  background: #303a30;
-}
 .motion-paused .folio-marquee__track,
 .motion-paused .caret {
   animation-play-state: paused !important;
