@@ -274,7 +274,7 @@ h2 {
 .hero__copy .hero__badge { justify-content: center; }
 .hero__copy :is(.hero__role, .hero__tagline) { margin-inline: auto; }
 .hero h1 {
-  font-size: clamp(3.35rem, 6.35vw, 6.2rem);
+  font-size: clamp(3.35rem, 6.8vw, 6.8rem);
   font-weight: 600;
   letter-spacing: -0.062em;
   line-height: 0.98;
@@ -285,13 +285,13 @@ h2 {
 }
 .hero__role {
   font-family: var(--mono);
-  font-size: clamp(0.74rem, 1vw, 0.92rem);
+  font-size: clamp(0.8rem, 1.1vw, 1.02rem);
   color: var(--accent);
   max-width: 46ch;
   margin: 0 0 18px;
 }
 .hero__tagline {
-  font-size: clamp(1.04rem, 1.55vw, 1.42rem);
+  font-size: clamp(1.08rem, 1.65vw, 1.54rem);
   line-height: 1.45;
   max-width: 37ch;
   color: var(--muted);
@@ -336,8 +336,11 @@ h2 {
 .hero-scene { position: relative; min-width: 0; }
 .hero-scene__stage {
   position: relative;
-  height: clamp(335px, 34vw, 505px);
+  height: clamp(355px, 36vw, 555px);
   background: radial-gradient(ellipse at 50% 64%, color-mix(in srgb, var(--violet) 9%, transparent), transparent 69%);
+}
+@media (min-width: 1000px) {
+  .hero.wrap { width: min(1440px, calc(100% - clamp(36px, 9vw, 150px))); }
 }
 .hero-scene__stage canvas {
   display: block;
@@ -743,7 +746,7 @@ h2 {
   .hero__tagline {
     margin-bottom: 18px;
   }
-  .hero-scene__stage { height: 320px; }
+  .hero-scene__stage { height: 340px; }
   .hero__foot {
     margin-top: 26px;
   }
@@ -785,18 +788,6 @@ h2 {
     opacity: 1;
     transform: none;
   }
-}
-#motion-toggle {
-  display: grid;
-  place-items: center;
-  margin-left: auto;
-  color: #bac8b2;
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
-}
-#motion-toggle:hover {
-  background: #303a30;
 }
 .motion-paused .folio-marquee__track,
 .motion-paused .caret {

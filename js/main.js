@@ -272,19 +272,9 @@ async function enhanceMotion() {
     /* Navegação e rolagem nativas continuam disponíveis. */
   }
 }
-const motionControl = $('#motion-toggle');
-function setAutoPaused(paused) {
-  document.body.classList.toggle('motion-paused', paused);
-  document.dispatchEvent(new Event('portfolio-motion'));
-  motionControl.setAttribute('aria-pressed', String(paused));
-  motionControl.title = paused ? 'Retomar animações automáticas' : 'Pausar animações automáticas';
-  motionControl.setAttribute('aria-label', motionControl.title);
-  motionControl.querySelector('path').setAttribute('d', paused ? 'M6 4l9 6-9 6z' : 'M7 5v10m6-10v10');
-}
-motionControl.onclick = () => setAutoPaused(!document.body.classList.contains('motion-paused'));
 function syncMotionPreference() {
-  motionControl.hidden = reduced.matches;
-  setAutoPaused(reduced.matches);
+  document.body.classList.toggle('motion-paused', reduced.matches);
+  document.dispatchEvent(new Event('portfolio-motion'));
 }
 syncMotionPreference();
 reduced.addEventListener('change', syncMotionPreference);
