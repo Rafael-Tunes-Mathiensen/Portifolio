@@ -106,9 +106,10 @@ function audienceView(role) {
 function sectionCase() {
   const audience = Object.keys(tcc.audiences);
   return `<section id="bidxchange" class="folio-section case"><div class="wrap">
+    <h2 class="case__title">${tcc.name}</h2>
     <header class="case-cover">
       <div class="case-cover__story">
-        <div class="case-cover__identity"><h2><img src="${tcc.preview.logo}" alt="${tcc.name}" width="170" height="108" loading="lazy"></h2><span class="case__seal">TCC</span></div>
+        <div class="case-cover__identity"><img src="${tcc.preview.logo}" alt="" width="170" height="108" loading="lazy"><span class="case__seal">TCC</span></div>
         <h3>${tcc.pitch}</h3><p>${tcc.overview}</p><p class="case__authors">Por ${tcc.authors}</p>
         <div class="case-cover__links">${link('Acessar plataforma', tcc.live, 'case-cover__primary magnetic')}${link('Ver documentação', tcc.docs, 'case-cover__secondary')}</div>
       </div>
