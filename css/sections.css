@@ -1241,6 +1241,19 @@
   background: radial-gradient(circle, #ffffff24 1px, transparent 1.5px) center / 12px 12px;
 }
 .hobbies__stage img { width: clamp(4rem, 6vw, 6rem); height: auto; filter: drop-shadow(3px 5px 0 #12111c70); }
+:root[data-theme='light'] .hobbies .hobbies__stage {
+  --hobby-tint: var(--violet);
+  background: radial-gradient(ellipse at 50% 115%, color-mix(in srgb, var(--hobby-tint) 27%, var(--panel)), transparent 75%),
+    color-mix(in srgb, var(--hobby-tint) 9%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--hobby-tint) 24%, var(--panel));
+}
+:root[data-theme='light'] .hobbies li:is(:nth-child(4n+2), :nth-child(4n+3)) .hobbies__stage {
+  --hobby-tint: var(--accent);
+}
+:root[data-theme='light'] .hobbies__stage::before {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--hobby-tint) 20%, transparent) 1px, transparent 1.5px);
+}
+:root[data-theme='light'] .hobbies__stage img { filter: drop-shadow(2px 3px 0 #282d2940); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   body:not(.motion-paused) .hobbies__stage img { transition: transform .28s ease-out; }
   body:not(.motion-paused) .hobbies li:hover img { transform: translateY(-4px) rotate(-6deg) scale(1.06); }
