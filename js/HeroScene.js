@@ -122,7 +122,7 @@ export function mountHeroScene(stage) {
     solid(mug, cylinder, paint('#483343'), 0, .541, 0, .426, .008, .426);
     for (const y of [.14, .43]) solid(mug, cube, cream, .30, y, 0, .23, .08, .09);
     solid(mug, cube, cream, .397, .284, 0, .08, .34, .09);
-    const steam = Array.from({ length: 4 }, () => {
+    const steam = Array.from({ length: 7 }, (_, index) => {
       const material = new T.MeshBasicMaterial({
         color: '#eadfff', transparent: true, opacity: 0, depthWrite: false,
       });
@@ -131,7 +131,7 @@ export function mountHeroScene(stage) {
       // O vapor não intercepta os cliques na caneca ou nos outros atalhos.
       puff.raycast = () => {};
       mug.add(puff);
-      return puff;
+      return { puff, mote: index >= 4, cycle: -1, x: 0, z: 0, drift: 0 };
     });
     const plant = part('sobre', -2.35, -.15);
     const pot = paint('#d1b0b7');
@@ -266,11 +266,26 @@ export function mountHeroScene(stage) {
       motion = reduced.matches ? 0 : T.MathUtils.damp(motion, still ? 0 : 1, 7, dt);
       if (motion < .001) motion = 0;
       elapsed += dt * motion;
-      steam.forEach((puff, index) => {
-        const phase = (elapsed / 2.8 + index / steam.length) % 1;
-        puff.position.set(Math.sin(phase * 5) * phase * .19, .56 + phase * .96, -phase * .1);
-        puff.scale.set(.12 + phase * .23, .16 + phase * .3, .12 + phase * .23);
-        puff.material.opacity = Math.sin(Math.PI * phase) ** 2 * .28 * motion;
+      steam.forEach((particle, index) => {
+        const { puff, mote } = particle;
+        const time = elapsed / (mote ? 5.8 : 2.8) + index / (mote ? 3 : 4);
+        const cycle = Math.floor(time);
+        // Sorteia na passagem pelo ponto invisível para evitar saltos no vapor.
+        if (cycle !== particle.cycle) {
+          particle.cycle = cycle;
+          particle.x = (Math.random() - .5) * (mote ? .48 : .22);
+          particle.z = (Math.random() - .5) * (mote ? .36 : .22);
+          particle.drift = (Math.random() - .5) * .45;
+        }
+        const phase = Math.min(1, (time - cycle) * (mote ? 4 : 1));
+        puff.position.set(
+          particle.x + Math.sin(phase * 3) * particle.drift,
+          (mote ? .75 : .56) + phase * (mote ? .68 : .96),
+          particle.z - phase * .1,
+        );
+        if (mote) puff.scale.setScalar(.045);
+        else puff.scale.set(.12 + phase * .23, .16 + phase * .3, .12 + phase * .23);
+        puff.material.opacity = Math.sin(Math.PI * phase) ** 2 * (mote ? .55 : .28) * motion;
       });
       const follow = 1 - Math.exp(-(tilt.lengthSq() ? 7 : 1.1)*dt);
       rig.rotation.y += (tilt.x*.56*motion-rig.rotation.y)*follow;
