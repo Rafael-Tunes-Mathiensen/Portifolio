@@ -14,6 +14,8 @@ Abra [o portfólio local](http://127.0.0.1:8000/). No Windows, também é possí
 
 ## Editar o portfólio
 
+As regras de estrutura, validação, branches e commits estão no [AGENTS.md](AGENTS.md).
+
 Na seção de contato, os rótulos e ícones dos quatro canais vêm de `profile.socialActions` em `js/data.js`. Cada chave corresponde ao endereço no mesmo perfil. O WhatsApp usa o número e a mensagem predefinida. Os símbolos de WhatsApp, LinkedIn e Instagram são do [Simple Icons v11.15.0](https://github.com/simple-icons/simple-icons/tree/11.15.0), distribuído sob CC0. O GitHub reutiliza o símbolo do Devicon já utilizado em Skills.
 
 A capa do case BidXchange usa a marca enviada pelos autores e duas capturas da página inicial pública, uma em desktop e outra em celular. Atualize o endereço em `tcc.live` e as imagens de `tcc.preview` no `js/data.js` quando a interface mudar. As quatro cenas logo abaixo ilustram o fluxo de compra; os textos de cada etapa também ficam no cadastro do TCC.
