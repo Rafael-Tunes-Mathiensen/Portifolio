@@ -927,6 +927,11 @@
   align-items: center;
   gap: .3rem;
 }
+.gallery__controls [data-gallery-pause]:not([hidden]) {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
 .gallery__controls button,
 .cert-dialog__header button {
   border: 1px solid var(--line);
