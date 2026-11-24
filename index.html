@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101310" />
+    <title>Rafael Tunes Mathiensen — Desenvolvimento de sistemas</title>
+    <meta
+      name="description"
+      content="Conheça Rafael Tunes Mathiensen, estudante de ADS na Fatec. Explore o BidXchange, projetos de desenvolvimento de sistemas e experiências de formação."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Rafael Tunes Mathiensen — Portfólio" />
+    <meta
+      property="og:description"
+      content="Primeiro, entendo o problema. Depois, escrevo o código. Conheça o BidXchange e outros projetos."
+    />
+    <meta property="og:image" content="./assets/social.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Rafael Tunes Mathiensen — Portfólio" />
+    <meta
+      name="twitter:description"
+      content="Projetos, estudos e experiências em desenvolvimento de sistemas."
+    />
+    <meta name="twitter:image" content="./assets/social.png" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      media="print"
+      onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/sections.css" />
+    <link rel="preload" as="image" href="./assets/hero.webp" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Rafael Tunes Mathiensen",
+        "jobTitle": "Estudante de Análise e Desenvolvimento de Sistemas",
+        "sameAs": [
+          "https://github.com/Rafael-Tunes-Mathiensen",
+          "https://www.linkedin.com/in/rafael-tunes-mathiensen/"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#principal">Pular para o conteúdo</a>
+    <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" /></symbol>
+        <symbol id="i-external" viewBox="0 0 24 24"><path d="M6 18 18 6M7 6h11v11" /></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2" />
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18" /></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+          <circle cx="10.5" cy="10.5" r="5.5" />
+          <path d="m15 15 5 5" />
+        </symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24">
+          <rect x="8" y="8" width="12" height="13" rx="2" />
+          <path d="M16 8V3H3v13h5" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24">
+          <path d="m7 7-5 5 5 5m10-10 5 5-5 5m-4-15-2 20" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="progress" aria-hidden="true"></div>
+    <header class="header">
+      <div class="wrap header__inner">
+        <a class="brand availability" href="#inicio" aria-label="Rafael Mathiensen, início"><img src="./assets/favicon.svg" width="32" height="32" alt="" />Rafael Mathiensen</a>
+        <nav class="nav" aria-label="Navegação principal" id="navigation">
+          <a href="#sobre">Sobre</a>
+          <a href="#skills">Skills</a>
+          <a href="#bidxchange">BidXchange</a>
+          <a href="#projetos">Projetos</a>
+          <a href="#mentorias">Trajetória</a>
+          <a href="#contato">Contato</a>
+        </nav>
+        <div class="header__tools">
+          <button class="command" id="command" aria-label="Abrir navegação rápida (Control K)">
+            <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
+          </button>
+          <button class="tool" id="theme" aria-label="Ativar tema claro" aria-pressed="false">
+            <svg class="icon"><use href="#i-sun" /></svg>
+          </button>
+          <button
+            class="tool header__menu"
+            id="menu"
+            aria-controls="navigation"
+            aria-expanded="false"
+            aria-label="Abrir menu"
+          >
+            <svg class="icon"><use href="#i-menu" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="principal">
+      <section class="hero wrap" id="inicio" aria-labelledby="hero-name">
+        <div class="hero__layout">
+          <div class="hero__copy">
+            <p class="availability hero__badge"><i aria-hidden="true"></i>disponível para estágio</p>
+            <h1 id="hero-name">
+              <span>Rafael Tunes</span> <span>Mathiensen<span class="accent">.</span></span>
+            </h1>
+            <p id="role" class="hero__role">
+              Estudante de Análise e Desenvolvimento de Sistemas na Fatec
+            </p>
+            <p id="tagline" class="hero__tagline">
+              Primeiro, entendo o problema. Depois, escrevo o código.
+            </p>
+          </div>
+          <figure class="hero-scene">
+            <div class="hero-scene__stage">
+              <span class="hero-scene__tip" hidden aria-hidden="true"></span>
+              <img
+                src="./assets/hero.webp"
+                width="960"
+                height="640"
+                alt="Bancada em pixel art com um monitor de tubo exibindo código verde."
+                fetchpriority="high"
+              />
+            </div>
+            <nav aria-label="Atalhos da bancada" class="hero-scene__links sr-only">
+              <ul>
+                <li><a href="#projetos">Projetos</a></li>
+                <li><a href="#bidxchange">BidXchange</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contato">Contato</a></li>
+              </ul>
+            </nav>
+            <figcaption>
+              <span class="prompt" aria-hidden="true">❯</span>
+              <span id="terminal">Desenvolvimento de sistemas</span
+              ><span class="caret" aria-hidden="true"></span
+              ><button
+                id="motion-toggle"
+                aria-label="Pausar animações automáticas"
+                aria-pressed="false"
+                title="Pausar animações automáticas"
+              >
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M7 5v10m6-10v10" />
+                </svg>
+              </button>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="hero__foot">
+          <span class="availability"><i></i> Buscando estágio ou jovem aprendiz</span
+          ><a href="#sobre">Percorrer portfólio <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+      <section id="sobre" class="folio-section">
+        <div class="wrap about-grid">
+          <div class="about__portrait"><img src="./assets/fotos/rafael.webp" alt="Retrato de Rafael Tunes Mathiensen" width="420" height="520" loading="lazy"></div>
+          <div>
+            <h2>Sobre mim</h2>
+            <div id="about-content">
+              <p class="folio-lead">Gosto de entender o problema antes de programar. Quando estudo uma tecnologia, testo soluções diferentes, anoto o que aprendi e comparo minhas escolhas com as de quem estuda comigo.</p>
+              <p>Procuro uma vaga de estágio ou de jovem aprendiz em desenvolvimento de sistemas. Quero aplicar o que estudo na Fatec e aprender com uma equipe.</p>
+              <div class="education"><span class="folio-rail" aria-hidden="true"></span><h3>Análise e Desenvolvimento de Sistemas</h3><span>Fatec</span><p>Graduação tecnológica na rede pública de ensino superior de São Paulo, com formação técnica e prática.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div id="sections"></div>
+      <noscript
+        ><p class="wrap">
+          Ative o JavaScript para explorar os projetos e certificados. Você também pode consultar a
+          <a href="https://github.com/Rafael-Tunes-Mathiensen/BidXchange-Documentacao"
+            >documentação do BidXchange</a
+          >.
+        </p></noscript
+      >
+      <section id="contato" class="contact wrap" aria-labelledby="contact-title">
+        <span class="contact__eyebrow">› vamos conversar</span>
+        <h2 id="contact-title">Entre em contato<em>!</em></h2>
+        <p class="contact__intro">Projetos, vagas ou só um oi. Respondo o mais rápido que puder.</p>
+        <div id="contact-links"></div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        <a class="brand" href="#inicio" aria-label="Rafael Tunes Mathiensen, início"><img src="./assets/favicon.svg" width="32" height="32" alt="" /></a>
+        ><span>Rafael Tunes Mathiensen · 2026</span><a href="#inicio">Voltar ao topo ↑</a>
+      </div>
+    </footer>
+    <dialog id="palette" class="palette" aria-labelledby="palette-title">
+      <div class="palette__head">
+        <h2 id="palette-title">Navegar pelo portfólio</h2>
+        <button class="tool" aria-label="Fechar navegação">×</button>
+      </div>
+      <label for="search">Buscar seção</label><input id="search" type="search" autocomplete="off" />
+      <nav id="matches" aria-label="Resultados"></nav>
+      <p id="empty" hidden>Nenhuma seção encontrada.</p>
+    </dialog>
+    <div class="cursor" aria-hidden="true"></div>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
