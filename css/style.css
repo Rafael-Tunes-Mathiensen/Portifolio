@@ -504,8 +504,11 @@ h2 {
   background: currentColor;
   mask: var(--logo) center / contain no-repeat;
 }
-.social-link--whatsapp .social-link__logo,
-.social-link:is(:hover, :focus-visible) .social-link__logo { color: var(--dock-green); }
+.social-link--whatsapp { --social-color: #25d366; }
+.social-link--linkedin { --social-color: #0a66c2; }
+.social-link--github { --social-color: var(--text); }
+.social-link--instagram { --social-color: #e1306c; }
+.social-link:is(:hover, :focus-visible) .social-link__logo { color: var(--social-color); }
 /* Three stepped rays sit just outside the enlarged mark, like the reference. */
 .social-link__logo::after {
   content: "";
@@ -524,7 +527,7 @@ h2 {
   body:has(.social-link:hover) .cursor { display: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  body:not(.motion-paused) .social-link__logo { transition: transform .24s cubic-bezier(.2,.85,.25,1.2); }
+  body:not(.motion-paused) .social-link__logo { transition: transform .24s cubic-bezier(.2,.85,.25,1.2), color .18s ease; }
   body:not(.motion-paused) .social-link__logo::after { transition: opacity .15s ease-out .06s; }
   body:not(.motion-paused) .social-link:is(:hover, :focus-visible) .social-link__logo {
     transform: translateY(-28%) scale(1.12);
@@ -538,7 +541,7 @@ h2 {
   height: calc(var(--mark) * .95);
   border-radius: 50%;
   pointer-events: none;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--dock-green) 38%, transparent), transparent 70%);
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--social-color) 38%, transparent), transparent 70%);
 }
 .contact__email {
   display: flex;
