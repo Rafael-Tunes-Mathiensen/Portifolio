@@ -1328,3 +1328,33 @@
     display: none;
   }
 }
+
+.loading-preview[open] {
+  position: fixed; inset: 0; margin: 0; padding: 0; border: 0;
+  width: 100%; height: 100%; max-width: none; max-height: none;
+  display: grid; place-items: center; overflow: hidden;
+  background: transparent; color: #f3f3ef;
+}
+.loading-preview::backdrop { background: transparent; }
+html:has(.loading-preview[open]) { overflow: hidden; }
+.loading-preview form { position: absolute; inset: auto 1rem max(1rem, env(safe-area-inset-bottom)) auto; }
+.loading-preview button {
+  min-height: 44px; padding: .45rem 1rem; border: 1px solid #a29ab0;
+  border-radius: 2rem; background: #17151d; color: #fff; font: .8rem var(--mono);
+}
+.loading-preview button:focus-visible { outline: 2px solid #bcf98a; outline-offset: 4px; }
+
+.loading-preview__window {
+  position: absolute; inset: 22% 17%; border: 1px solid #b6a2d9; border-radius: 14px;
+  box-shadow: 0 0 0 150vmax #131019, inset 0 0 25px #403053;
+  background: repeating-linear-gradient(0deg, #14101c60 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(90deg, #14101c50 0 2px, transparent 2px 7px);
+  backdrop-filter: blur(5px) saturate(.7);
+  transition: inset .65s cubic-bezier(.22,.7,.16,1), backdrop-filter .65s, border-color .65s, border-radius .65s;
+  animation: loading-window .5s ease-out both;
+}
+.loading-preview--pixels.is-revealing .loading-preview__window {
+  inset: 0; border-color: transparent; border-radius: 0;
+  backdrop-filter: blur(0); background: transparent; box-shadow: none;
+}
+@keyframes loading-window { from { scale: .86; opacity: .7; } }
