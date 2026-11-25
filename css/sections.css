@@ -1344,17 +1344,37 @@ html:has(.loading-preview[open]) { overflow: hidden; }
 }
 .loading-preview button:focus-visible { outline: 2px solid #bcf98a; outline-offset: 4px; }
 
+
 .loading-preview__window {
-  position: absolute; inset: 22% 17%; border: 1px solid #b6a2d9; border-radius: 14px;
-  box-shadow: 0 0 0 150vmax #131019, inset 0 0 25px #403053;
-  background: repeating-linear-gradient(0deg, #14101c60 0 2px, transparent 2px 7px),
-    repeating-linear-gradient(90deg, #14101c50 0 2px, transparent 2px 7px);
-  backdrop-filter: blur(5px) saturate(.7);
-  transition: inset .65s cubic-bezier(.22,.7,.16,1), backdrop-filter .65s, border-color .65s, border-radius .65s;
-  animation: loading-window .5s ease-out both;
+  position: absolute;
+  inset: clamp(3rem, 17dvh, 10rem) max(5vw, calc((100vw - 58rem) / 2));
+  border: 1px solid #b6a2d9;
+  border-radius: 18px;
+  box-shadow: 0 0 0 150vmax #131019, inset 0 0 38px #33224d;
+  backdrop-filter: blur(6px) saturate(.66);
+  transition: inset .72s cubic-bezier(.22,.7,.16,1), backdrop-filter .68s,
+    border-color .72s, border-radius .72s, box-shadow .72s;
+  animation: loading-window .4s ease-out both;
+}
+.loading-preview__window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(0deg, #11091c66 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(90deg, #11091c48 0 2px, transparent 2px 6px);
+  transition: opacity .65s;
 }
 .loading-preview--pixels.is-revealing .loading-preview__window {
-  inset: 0; border-color: transparent; border-radius: 0;
-  backdrop-filter: blur(0); background: transparent; box-shadow: none;
+  inset: 0;
+  border-color: transparent;
+  border-radius: 0;
+  backdrop-filter: blur(0) saturate(1);
+  box-shadow: 0 0 0 150vmax #13101900, inset 0 0 38px #33224d00;
 }
-@keyframes loading-window { from { scale: .86; opacity: .7; } }
+.loading-preview--pixels.is-revealing .loading-preview__window::after { opacity: 0; }
+@keyframes loading-window { from { scale: .96; opacity: .85; } }
+
+@media (max-width: 600px) {
+  .loading-preview__window { inset: 10dvh 7vw 15dvh; }
+}
