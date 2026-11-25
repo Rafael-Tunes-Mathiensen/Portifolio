@@ -1,6 +1,6 @@
 import * as T from './vendor/three/three.module.min.js';
 
-export function mountHeroScene(stage, onScreenReady) {
+export function mountHeroScene(stage) {
   const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   const canvas = renderer.domElement;
   const fallback = stage.querySelector('.hero-scene__placeholder');
@@ -91,7 +91,7 @@ export function mountHeroScene(stage, onScreenReady) {
     texture.colorSpace = T.SRGBColorSpace;
     const display = new T.MeshBasicMaterial({ map: texture });
     materials.add(display);
-    const monitorScreen = solid(monitor, plane, display, 0, 1.59, .49, 2.13, 1.60, 1);
+    solid(monitor, plane, display, 0, 1.59, .49, 2.13, 1.60, 1);
     solid(monitor, cube, paint('#b6f06a'), .98, .64, .425, .15, .045, .024);
 
     const tower = part('bidxchange', 1.62, -.35);
@@ -261,56 +261,6 @@ export function mountHeroScene(stage, onScreenReady) {
 
     let motion = reduced.matches || document.body.classList.contains('motion-paused') ? 0 : 1;
     let lift = 0;
-    let intro, started, retreat;
-    const restingPosition = camera.position.clone();
-    const restingTarget = new T.Vector3(0, .12, 0);
-    const screenCenter = monitorScreen.getWorldPosition(new T.Vector3());
-    const closePosition = screenCenter.clone().add(new T.Vector3(0, 0, 1));
-    const target = new T.Vector3();
-
-    function frameIntro() {
-      if (!intro.open) {
-        intro = null;
-        camera.position.copy(restingPosition);
-        camera.lookAt(restingTarget);
-        resize();
-        drawn = -1;
-        return;
-      }
-      const now = performance.now();
-      const load = Math.min(1, (now - started) / 1450);
-      if (load === 1 && retreat === undefined) retreat = now + 240;
-      const t = retreat === undefined ? 0 : T.MathUtils.smoothstep(now, retreat, retreat + 1650);
-      const width = intro.clientWidth, height = intro.clientHeight;
-      const box = stage.getBoundingClientRect();
-      const endHalf = Math.max(2.48, 3.77 * box.height / box.width);
-      const startHalf = Math.max(.50, .84 * height / width);
-      const half = T.MathUtils.lerp(startHalf, endHalf * height / box.height, t);
-      const halfWidth = half * width / height;
-      // O enquadramento final coincide com o canvas da bancada, inclusive no layout vertical.
-      const dx = (1 - (2 * box.left + box.width) / width) * halfWidth * t;
-      const dy = ((2 * box.top + box.height) / height - 1) * half * t;
-      Object.assign(camera, { left: dx - halfWidth, right: dx + halfWidth, top: dy + half, bottom: dy - half });
-      camera.position.lerpVectors(closePosition, restingPosition, t);
-      camera.lookAt(target.lerpVectors(screenCenter, restingTarget, t));
-      camera.updateProjectionMatrix();
-      intro.style.setProperty('--intro-shade', 1 - t);
-      ctx.fillStyle = '#10251d';
-      ctx.fillRect(0, 0, 256, 192);
-      ctx.fillStyle = '#a59cb9';
-      ctx.font = '10px monospace';
-      ctx.fillText('rafael@bancada:~$', 37, 72);
-      ctx.fillStyle = '#c1fb94';
-      ctx.font = 'bold 14px monospace';
-      ctx.fillText('> abrir portfolio', 37, 93);
-      ctx.strokeStyle = '#79947b';
-      ctx.strokeRect(37, 105, 181, 11);
-      ctx.fillRect(40, 108, Math.floor(175 * load), 5);
-      ctx.font = '10px monospace';
-      ctx.fillText(Math.floor(load * 100) + '%', 37, 131);
-      texture.needsUpdate = true;
-      if (t === 1) intro.close();
-    }
     function render(dt) {
       const still = reduced.matches || document.body.classList.contains('motion-paused');
       motion = reduced.matches ? 0 : T.MathUtils.damp(motion, still ? 0 : 1, 7, dt);
@@ -342,14 +292,9 @@ export function mountHeroScene(stage, onScreenReady) {
       rig.rotation.x += (-tilt.y*.27*motion-rig.rotation.x)*follow;
       lift = T.MathUtils.damp(lift, Math.sin(elapsed*1.1)*.055*motion, 7, dt);
       rig.position.y = lift;
-      if (intro) {
-        rig.rotation.set(0, 0, 0);
-        rig.position.y = 0;
-        frameIntro();
-      }
       flash = Math.max(0, flash-dt*5);
       const tick = Math.floor(elapsed*12);
-      if (!intro && (drawn !== tick || flash > 0)) {
+      if (drawn !== tick || flash > 0) {
         drawScreen(elapsed);
         drawn = flash > 0 ? -1 : tick;
       }
@@ -378,7 +323,7 @@ export function mountHeroScene(stage, onScreenReady) {
       const aspect = w/h, halfHeight = Math.max(2.48, 3.77/aspect);
       Object.assign(camera, {left: -halfHeight*aspect, right: halfHeight*aspect, top: halfHeight, bottom: -halfHeight});
       camera.updateProjectionMatrix();
-      renderer.setSize(intro?.open ? intro.clientWidth : w, intro?.open ? intro.clientHeight : h, false);
+      renderer.setSize(w,h,false);
       voxels.count = mobile.matches ? 15 : 40;
     }
     function theme() {
@@ -402,8 +347,6 @@ export function mountHeroScene(stage, onScreenReady) {
     canvas.addEventListener('webglcontextlost', dispose, options);
     stage.append(canvas);
     theme();
-    intro = onScreenReady?.(canvas);
-    started = performance.now();
     resize();
     render(0);
     stage.classList.remove('is-loading');

@@ -1,35 +1,3 @@
-function startIntro(reduced) {
-  const dialog = document.querySelector('.intro');
-  try {
-    if (localStorage.getItem('rtm-intro-seen')) return;
-    localStorage.setItem('rtm-intro-seen', '1');
-  } catch { return; }
-  if (reduced.matches || location.hash || scrollY || !dialog.showModal) return;
-  dialog.showModal();
-  const close = () => dialog.close();
-  let timeout = setTimeout(close, 5000);
-  const events = new AbortController();
-  const options = { signal: events.signal };
-  reduced.addEventListener('change', close, options);
-  window.addEventListener('pagehide', close, options);
-  window.addEventListener('orientationchange', close, options);
-  dialog.addEventListener('close', () => {
-    clearTimeout(timeout);
-    events.abort();
-  }, { once: true });
-  return canvas => {
-    if (!dialog.open) return;
-    const stage = canvas.parentElement;
-    dialog.prepend(canvas);
-    clearTimeout(timeout);
-    timeout = setTimeout(close, 4500);
-    dialog.addEventListener('close', () => {
-      if (canvas.isConnected) stage.append(canvas);
-    }, { once: true });
-    return dialog;
-  };
-}
-
 export function setupHero(profile, reduced) {
   const $ = selector => document.querySelector(selector);
   const heading = $('#hero-name');
@@ -88,12 +56,11 @@ export function setupHero(profile, reduced) {
     status.textContent = loading ? 'Carregando a bancada 3D…' : 'Cena 3D indisponível.';
   }
   setLoading(true);
-  const intro = startIntro(reduced);
   import('./HeroScene.js').then(({ mountHeroScene }) => {
     let dispose;
     function mount() {
       setLoading(true);
-      try { dispose = mountHeroScene(stage, intro); }
+      try { dispose = mountHeroScene(stage); }
       catch { setLoading(false); }
     }
     mount();
