@@ -7,8 +7,7 @@ function startIntro(reduced) {
   if (reduced.matches || location.hash || scrollY || !dialog.showModal) return;
   dialog.showModal();
   const close = () => dialog.close();
-  const timeout = setTimeout(close, 5200);
-  const animations = [];
+  let timeout = setTimeout(close, 5000);
   const events = new AbortController();
   const options = { signal: events.signal };
   reduced.addEventListener('change', close, options);
@@ -17,39 +16,17 @@ function startIntro(reduced) {
   dialog.addEventListener('close', () => {
     clearTimeout(timeout);
     events.abort();
-    animations.forEach(animation => animation.cancel());
   }, { once: true });
-  const started = performance.now();
-  return (canvas, point) => {
+  return canvas => {
     if (!dialog.open) return;
-    const box = canvas.getBoundingClientRect();
-    const x = box.width * (1 + point.x) / 2;
-    const y = box.height * (1 - point.y) / 2;
-    const delay = Math.max(0, 1960 - (performance.now() - started));
-    const duration = 1780;
-    const revealAt = performance.now() + delay;
-    const timing = { duration, delay, fill: 'both', easing: 'cubic-bezier(.36,.02,.18,1)' };
-    const move = (element, frames) => {
-      const animation = element.animate(frames, timing);
-      animations.push(animation);
-      return animation;
-    };
-    move(canvas, [
-      { transformOrigin: '0 0', transform: 'translate(' + (innerWidth / 2 - box.left - x * 7) + 'px,' + (innerHeight / 2 - box.top - y * 7) + 'px) scale(7)' },
-      { transformOrigin: '0 0', transform: 'none' },
-    ]);
-    const screen = dialog.querySelector('.intro__screen');
-    move(screen, [
-      { opacity: 1, transform: 'scale(1)' },
-      { opacity: 0, transform: 'scale(1.14)', offset: .6 },
-      { opacity: 0, transform: 'scale(1.14)' },
-    ]);
-    const dot = document.querySelector('#hero-name .accent').getBoundingClientRect();
-    move(dialog.querySelector('.intro__dot'), [
-      { opacity: 0 }, { opacity: 1, offset: .12 },
-      { left: (dot.left + dot.width / 2) + 'px', top: (dot.bottom - dot.height * .22) + 'px', opacity: 0 },
-    ]).onfinish = close;
-    return () => dialog.open ? Math.min(1, Math.max(0, (performance.now() - revealAt) / duration)) : 1;
+    const stage = canvas.parentElement;
+    dialog.prepend(canvas);
+    clearTimeout(timeout);
+    timeout = setTimeout(close, 4500);
+    dialog.addEventListener('close', () => {
+      if (canvas.isConnected) stage.append(canvas);
+    }, { once: true });
+    return dialog;
   };
 }
 
