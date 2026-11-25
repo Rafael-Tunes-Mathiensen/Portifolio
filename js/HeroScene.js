@@ -1,6 +1,6 @@
 import * as T from './vendor/three/three.module.min.js';
 
-export function mountHeroScene(stage) {
+export function mountHeroScene(stage, onScreenReady) {
   const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   const canvas = renderer.domElement;
   const fallback = stage.querySelector('.hero-scene__placeholder');
@@ -91,7 +91,7 @@ export function mountHeroScene(stage) {
     texture.colorSpace = T.SRGBColorSpace;
     const display = new T.MeshBasicMaterial({ map: texture });
     materials.add(display);
-    solid(monitor, plane, display, 0, 1.59, .49, 2.13, 1.60, 1);
+    const monitorScreen = solid(monitor, plane, display, 0, 1.59, .49, 2.13, 1.60, 1);
     solid(monitor, cube, paint('#b6f06a'), .98, .64, .425, .15, .045, .024);
 
     const tower = part('bidxchange', 1.62, -.35);
@@ -349,6 +349,7 @@ export function mountHeroScene(stage) {
     theme();
     resize();
     render(0);
+    onScreenReady?.(canvas, monitorScreen.getWorldPosition(new T.Vector3()).project(camera));
     stage.classList.remove('is-loading');
     fallback.hidden = true;
     const sizeObserver = new ResizeObserver(resize);
