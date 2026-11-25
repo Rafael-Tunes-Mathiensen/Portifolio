@@ -7,7 +7,7 @@ function startIntro(reduced) {
   if (reduced.matches || location.hash || scrollY || !dialog.showModal) return;
   dialog.showModal();
   const close = () => dialog.close();
-  const timeout = setTimeout(close, 3200);
+  const timeout = setTimeout(close, 5200);
   const animations = [];
   const events = new AbortController();
   const options = { signal: events.signal };
@@ -25,8 +25,10 @@ function startIntro(reduced) {
     const box = canvas.getBoundingClientRect();
     const x = box.width * (1 + point.x) / 2;
     const y = box.height * (1 - point.y) / 2;
-    const delay = Math.max(0, 1150 - (performance.now() - started));
-    const timing = { duration: 1150, delay, fill: 'both', easing: 'cubic-bezier(.32,0,.15,1)' };
+    const delay = Math.max(0, 1960 - (performance.now() - started));
+    const duration = 1780;
+    const revealAt = performance.now() + delay;
+    const timing = { duration, delay, fill: 'both', easing: 'cubic-bezier(.36,.02,.18,1)' };
     const move = (element, frames) => {
       const animation = element.animate(frames, timing);
       animations.push(animation);
@@ -37,12 +39,17 @@ function startIntro(reduced) {
       { transformOrigin: '0 0', transform: 'none' },
     ]);
     const screen = dialog.querySelector('.intro__screen');
-    move(screen, [{ opacity: 1 }, { opacity: 0 }]);
+    move(screen, [
+      { opacity: 1, transform: 'scale(1)' },
+      { opacity: 0, transform: 'scale(1.14)', offset: .6 },
+      { opacity: 0, transform: 'scale(1.14)' },
+    ]);
     const dot = document.querySelector('#hero-name .accent').getBoundingClientRect();
     move(dialog.querySelector('.intro__dot'), [
       { opacity: 0 }, { opacity: 1, offset: .12 },
       { left: (dot.left + dot.width / 2) + 'px', top: (dot.bottom - dot.height * .22) + 'px', opacity: 0 },
     ]).onfinish = close;
+    return () => dialog.open ? Math.min(1, Math.max(0, (performance.now() - revealAt) / duration)) : 1;
   };
 }
 

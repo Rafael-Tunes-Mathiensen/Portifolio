@@ -261,6 +261,8 @@ export function mountHeroScene(stage, onScreenReady) {
 
     let motion = reduced.matches || document.body.classList.contains('motion-paused') ? 0 : 1;
     let lift = 0;
+    let introProgress;
+    const assembly = [monitor, tower, keyboard, plant, mug];
     function render(dt) {
       const still = reduced.matches || document.body.classList.contains('motion-paused');
       motion = reduced.matches ? 0 : T.MathUtils.damp(motion, still ? 0 : 1, 7, dt);
@@ -292,6 +294,18 @@ export function mountHeroScene(stage, onScreenReady) {
       rig.rotation.x += (-tilt.y*.27*motion-rig.rotation.x)*follow;
       lift = T.MathUtils.damp(lift, Math.sin(elapsed*1.1)*.055*motion, 7, dt);
       rig.position.y = lift;
+      if (introProgress) {
+        const progress = introProgress();
+        const remaining = (1 - progress) ** 3;
+        rig.rotation.y = -.85 * remaining;
+        rig.rotation.x = .18 * remaining;
+        assembly.forEach((item, index) => {
+          const t = T.MathUtils.smoothstep(progress, index * .07, .66 + index * .07);
+          item.position.y = (1 - t) * (index % 2 ? 2.1 : 1.15);
+          item.rotation.y = (1 - t) * (index % 2 ? -.65 : .45);
+        });
+        if (progress === 1) introProgress = null;
+      }
       flash = Math.max(0, flash-dt*5);
       const tick = Math.floor(elapsed*12);
       if (drawn !== tick || flash > 0) {
@@ -349,7 +363,7 @@ export function mountHeroScene(stage, onScreenReady) {
     theme();
     resize();
     render(0);
-    onScreenReady?.(canvas, monitorScreen.getWorldPosition(new T.Vector3()).project(camera));
+    introProgress = onScreenReady?.(canvas, monitorScreen.getWorldPosition(new T.Vector3()).project(camera));
     stage.classList.remove('is-loading');
     fallback.hidden = true;
     const sizeObserver = new ResizeObserver(resize);
